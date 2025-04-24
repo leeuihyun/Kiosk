@@ -20,7 +20,7 @@ public class ShoppingCart {
     return menuItems.isEmpty();
   }
 
-  public void cancelShoppingCart() {
+  public void clearShoppingCart() {
     this.menuItems.clear();
   }
 

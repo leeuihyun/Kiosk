@@ -117,7 +117,7 @@ public class Kiosk {
 
   private void cancelMenuItemsAndPrint(Integer cancelNumber) {
     if(cancelNumber == 1) {
-      this.shoppingCart.cancelShoppingCart();
+      this.shoppingCart.clearShoppingCart();
       System.out.println("주문이 전부 취소되었습니다. 초기화면으로 이동합니다.");
     }
   }
@@ -159,12 +159,12 @@ public class Kiosk {
           printShoppingCartMenuItem();
           int orderNumber = getNumber("[ TOTAL ]\nW "+ this.shoppingCart.getTotalPrice() + "\n1. 주문        2. 메뉴판\n");
           if(orderNumber == 1) {
-            System.out.println("주문이 완료되었습니다. 금액은 W " + this.shoppingCart.getTotalPrice()+"입니다.\n종료합니다.");
-            break;
+            System.out.println("주문이 완료되었습니다. 금액은 W " + this.shoppingCart.getTotalPrice()+"입니다.");
+            shoppingCart.clearShoppingCart();
           }
         }else {
           // 주문 취소 선택
-          int cancelNumber = getNumber("주문을 전부 취소하시겠습니까?\n1. 확인        2. 취소");
+          int cancelNumber = getNumber("주문을 전부 취소하시겠습니까?\n1. 확인        2. 취소\n");
           cancelMenuItemsAndPrint(cancelNumber);
         }
       }
