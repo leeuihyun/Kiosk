@@ -1,9 +1,9 @@
-public class Menu {
+public class MenuItem {
   private String name;
   private Double price;
   private String desc;
 
-  public Menu(String name, Double price, String desc) {
+  public MenuItem(String name, Double price, String desc) {
     this.name = name;
     this.price = price;
     this.desc = desc;
