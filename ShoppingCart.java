@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShoppingCart {
   private List<MenuItem> menuItems;
@@ -24,7 +25,13 @@ public class ShoppingCart {
     this.menuItems.clear();
   }
 
-  public Double getTotalPrice() {
-    return menuItems.stream().map(MenuItem::getPrice).reduce(0.0, Double::sum);
+  public Double getTotalPrice(Integer rate) {
+    Double originalTotalPrice = menuItems.stream().map(MenuItem::getPrice).reduce(0.0, Double::sum);
+    return originalTotalPrice - (originalTotalPrice * rate/100.0);
+  }
+
+  public void cancelMenuItem(String menuItemName) {
+    this.menuItems = this.menuItems.stream().filter(v -> !v.getName().replaceAll("\\s+", "").equals(menuItemName.replaceAll("\\s+", ""))).collect(
+        Collectors.toList());
   }
 }

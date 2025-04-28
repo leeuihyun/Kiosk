@@ -56,13 +56,7 @@ public class Kiosk {
   }
 
   private void printShoppingCartMenuItem() {
-    for(int i=0;i<this.shoppingCart.getShoppingCart().size();i++) {
-      System.out.printf(
-          "%-15s | W %-3.1f | %s\n",
-          this.shoppingCart.getShoppingCart().get(i).getName(),
-          this.shoppingCart.getShoppingCart().get(i).getPrice(),
-          this.shoppingCart.getShoppingCart().get(i).getDesc());
-    }
+    this.shoppingCart.getShoppingCart().stream().forEach(item -> System.out.printf("%-15s | W %-3.1f | %s\n", item.getName(), item.getPrice(), item.getDesc()));
   }
 
   private void addShoppingCartAndPrint(Integer ShoppingNumber, MenuItem selectedMenuItem){
@@ -74,6 +68,20 @@ public class Kiosk {
   private void Orders() {
     System.out.println("아래와 같이 주문하시겠습니까?\n");
     System.out.println("[ ORDERS ]");
+  }
+
+  private void orderWithDiscount() {
+    System.out.println("할인 정보를 입력해주세요.");
+    int index = 1;
+    for(DiscountRate dr : DiscountRate.values()) {
+      System.out.println((index++) + ". " + dr.getName() + " : " + dr.getRate()+"%");
+    }
+    DiscountRate discountInfo = DiscountRate.idCheck(Integer.parseInt(scan.nextLine()));
+    System.out.println(discountInfo.getName() +"을 선택하셨습니다.");
+
+    System.out.println("주문이 완료되었습니다. 금액은 W " + this.shoppingCart.getTotalPrice(discountInfo.getRate())+"입니다.");
+    shoppingCart.clearShoppingCart();
+
   }
 
   private void printMainMenu() {
@@ -92,7 +100,7 @@ public class Kiosk {
 
   private Integer getNumber(String text) {
     System.out.printf(text);
-    return scan.nextInt();
+    return Integer.parseInt(scan.nextLine());
   }
 
   private void printCategoryMenu(Menu menu) {
@@ -115,10 +123,14 @@ public class Kiosk {
         " | " + selectedMenuItem.getDesc() + "\"");
   }
 
-  private void cancelMenuItemsAndPrint(Integer cancelNumber) {
-    if(cancelNumber == 1) {
-      this.shoppingCart.clearShoppingCart();
-      System.out.println("주문이 전부 취소되었습니다. 초기화면으로 이동합니다.");
+  private void cancelMenuItemsAndPrint(String cancelMenuItemName) {
+    this.shoppingCart.cancelMenuItem(cancelMenuItemName);
+    System.out.println("주문이 취소되었습니다.");
+    if(this.shoppingCart.isEmptyShoppingCart()) {
+      System.out.println("장바구니가 비었습니다");
+    }else {
+      System.out.println("[ ORDERS ]");
+      printShoppingCartMenuItem();
     }
   }
   public void start() {
@@ -157,15 +169,18 @@ public class Kiosk {
         if(inputNumber == menus.size()+1) {
           Orders();
           printShoppingCartMenuItem();
-          int orderNumber = getNumber("[ TOTAL ]\nW "+ this.shoppingCart.getTotalPrice() + "\n1. 주문        2. 메뉴판\n");
+          int orderNumber = getNumber("[ TOTAL ]\nW "+ this.shoppingCart.getTotalPrice(0) + "\n1. 주문        2. 메뉴판\n");
+
+          // 할인율 적용 주문
           if(orderNumber == 1) {
-            System.out.println("주문이 완료되었습니다. 금액은 W " + this.shoppingCart.getTotalPrice()+"입니다.");
-            shoppingCart.clearShoppingCart();
+            orderWithDiscount();
           }
         }else {
           // 주문 취소 선택
-          int cancelNumber = getNumber("주문을 전부 취소하시겠습니까?\n1. 확인        2. 취소\n");
-          cancelMenuItemsAndPrint(cancelNumber);
+          printShoppingCartMenuItem();
+          System.out.println("어떤 주문을 취소하시겠습니까? 취소하실 메뉴의 이름을 입력해주세요.");
+          String cancelMenuItemName = scan.nextLine();
+          cancelMenuItemsAndPrint(cancelMenuItemName);
         }
       }
     }
