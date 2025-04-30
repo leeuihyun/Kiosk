@@ -4,9 +4,9 @@ public enum DiscountRate {
   STUDENT(3,3, "학생"),
   COMMON(4,0, "일반");
 
-  private Integer id;
-  private Integer rate;
-  private String name;
+  private final Integer id;
+  private final Integer rate;
+  private final String name;
 
   DiscountRate(Integer id, Integer rate, String name) {
     this.id = id;
