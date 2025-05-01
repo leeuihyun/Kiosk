@@ -1,75 +1,48 @@
+package domain;
+
+import static Utils.ExceptionUtils.validateDetailMenuNumber;
+import static Utils.ExceptionUtils.validateMenuNumber;
+
+import EnumRoot.DiscountRate;
+import EnumRoot.Loop;
 import java.util.List;
 import java.util.Scanner;
 
+/*
+ * name : Kiosk
+ * desc : 메뉴를 관리하고 사용자 입력을 처리하는 클래스
+ */
 public class Kiosk {
   private List<Menu> menus;
-  private Scanner scan = new Scanner(System.in);
+  private Scanner scan;
   private ShoppingCart shoppingCart;
 
   public Kiosk(List<Menu> menus) {
     this.menus = menus;
     this.shoppingCart = new ShoppingCart();
+    this.scan = new Scanner(System.in);
   }
 
-  private Loop validateMenuNumber(Integer MenuInputNumber) {
-    if(MenuInputNumber == 0) {
-      System.out.println("프로그램을 종료합니다.");
-      return Loop.BREAK;
-    }
-    if(MenuInputNumber < 0) {
-      System.out.println("올바르지 않은 번호입니다.");
-      return Loop.CONTINUE;
-    }
-    if(shoppingCart.isEmptyShoppingCart() && MenuInputNumber > menus.size()) {
-      System.out.println("올바르지 않은 번호입니다.");
-      return Loop.CONTINUE;
-    }
-    if(!shoppingCart.isEmptyShoppingCart() && MenuInputNumber > menus.size()+2) {
-      System.out.println("올바르지 않은 번호입니다.");
-      return Loop.CONTINUE;
-    }
-    return Loop.TRUE;
-  }
-
-  private <T> Loop checkNumber(List<T> list, Integer number, String exitOrContinue) {
-    if(number < 0) {
-      System.out.println("올바르지 않은 번호입니다.");
-      return Loop.CONTINUE;
-    }
-
-    if(number > list.size()) {
-      System.out.println("올바르지 않은 번호입니다.");
-      return Loop.CONTINUE;
-    }
-
-    if(number == 0) {
-      if(exitOrContinue.equals("exit")) {
-        System.out.println("프로그램을 종료합니다.");
-        return Loop.BREAK;
-      }else{
-        System.out.println("재실행합니다.");
-        return Loop.CONTINUE;
-      }
-    }
-
-    return Loop.TRUE;
-  }
-
+  // 장바구니 목록 출력
   private void printShoppingCartMenuItem() {
     this.shoppingCart.getShoppingCart().stream().forEach(item -> System.out.printf("%-15s | W %-3.1f | %s\n", item.getName(), item.getPrice(), item.getDesc()));
   }
 
-  private void addShoppingCartAndPrint(Integer ShoppingNumber, MenuItem selectedMenuItem){
+  // 장바구니 추가 메서드
+  private void addShoppingCart(Integer ShoppingNumber, MenuItem selectedMenuItem){
     if(ShoppingNumber == 1) {
       shoppingCart.addShoppingCart(selectedMenuItem);
       System.out.println(selectedMenuItem.getName() + " 이 장바구니에 추가되었습니다.");
     }
   }
-  private void Orders() {
+
+  // 주문 질문 출력 메서드
+  private void orders() {
     System.out.println("아래와 같이 주문하시겠습니까?\n");
     System.out.println("[ ORDERS ]");
   }
 
+  // 할인 정보 적용 후 주문완료 메서드
   private void orderWithDiscount() {
     System.out.println("할인 정보를 입력해주세요.");
     int index = 1;
@@ -81,9 +54,9 @@ public class Kiosk {
 
     System.out.println("주문이 완료되었습니다. 금액은 W " + this.shoppingCart.getTotalPrice(discountInfo.getRate())+"입니다.");
     shoppingCart.clearShoppingCart();
-
   }
 
+  // 메인 메뉴 출력 메서드
   private void printMainMenu() {
     System.out.println("[ MAIN MENU ]");
     for(int i=0;i<menus.size();i++) {
@@ -98,12 +71,14 @@ public class Kiosk {
     }
   }
 
+  // 문자열 및 정수 입출력 메서드
   private Integer getNumber(String text) {
     System.out.printf(text);
     return Integer.parseInt(scan.nextLine());
   }
 
-  private void printCategoryMenu(Menu menu) {
+  // 선택한 메뉴의 세부 메뉴 출력 메서드
+  private void printDetailMenu(Menu menu) {
     System.out.println("[ " + menu.getCategory().toUpperCase() + " ]");
     List<MenuItem> items = menu.getMenuItems();
     for (int i = 0; i < items.size(); i++) {
@@ -113,6 +88,7 @@ public class Kiosk {
     System.out.println("0. 뒤로가기");
   }
 
+  // 선택한 메뉴 출력 메서드
   private void printSelectedMenuItem(MenuItem selectedMenuItem) {
     System.out.println("선택한 메뉴: " + selectedMenuItem.getName() +
         "  | W " + selectedMenuItem.getPrice() +
@@ -123,7 +99,8 @@ public class Kiosk {
         " | " + selectedMenuItem.getDesc() + "\"");
   }
 
-  private void cancelMenuItemsAndPrint(String cancelMenuItemName) {
+  // 주문 취소 메서드
+  private void cancelMenuItems(String cancelMenuItemName) {
     this.shoppingCart.cancelMenuItem(cancelMenuItemName);
     System.out.println("주문이 취소되었습니다.");
     if(this.shoppingCart.isEmptyShoppingCart()) {
@@ -140,18 +117,19 @@ public class Kiosk {
 
       // 메뉴 번호 입력 및 검증
       int inputNumber = getNumber("메뉴 번호를 입력해주세요 : ");
-      if(validateMenuNumber(inputNumber) == Loop.CONTINUE) {
+      Loop validateMenuNumber = validateMenuNumber(inputNumber,this.shoppingCart, menus);
+      if(validateMenuNumber == Loop.CONTINUE) {
         continue;
-      }else if(validateMenuNumber(inputNumber) == Loop.BREAK){
+      }else if(validateMenuNumber == Loop.BREAK){
         break;
       }
 
-      // 메뉴(카테고리) 번호 입력에 따른 카테고리별 세부메뉴 출력
+      // 메뉴(카테고리) 번호 입력에 따른 카테고리별 세부메뉴 출력 및 검증
       if(inputNumber <= menus.size()) {
         Menu selectedMenu = menus.get(inputNumber - 1);
-        printCategoryMenu(selectedMenu);
+        printDetailMenu(selectedMenu);
         int inputDetailMenuNumber = getNumber("세부 메뉴 번호를 입력해주세요 : ");
-        Loop checkInputDetailMenuNumber = checkNumber(menus.get(inputNumber-1).getMenuItems(), inputDetailMenuNumber, "continue");
+        Loop checkInputDetailMenuNumber = validateDetailMenuNumber(menus.get(inputNumber-1).getMenuItems(), inputDetailMenuNumber, "continue");
         if(checkInputDetailMenuNumber == Loop.CONTINUE) {
           continue;
         }
@@ -163,11 +141,11 @@ public class Kiosk {
         printSelectedMenuItem(selectedMenuItem);
 
         int shoppingNumber = getNumber("위 메뉴를 장바구니에 추가하시겠습니까?\n1. 확인        2. 취소\n");
-        addShoppingCartAndPrint(shoppingNumber,selectedMenuItem);
+        addShoppingCart(shoppingNumber,selectedMenuItem);
       }else {
         // 주문 선택
         if(inputNumber == menus.size()+1) {
-          Orders();
+          orders();
           printShoppingCartMenuItem();
           int orderNumber = getNumber("[ TOTAL ]\nW "+ this.shoppingCart.getTotalPrice(0) + "\n1. 주문        2. 메뉴판\n");
 
@@ -180,7 +158,7 @@ public class Kiosk {
           printShoppingCartMenuItem();
           System.out.println("어떤 주문을 취소하시겠습니까? 취소하실 메뉴의 이름을 입력해주세요.");
           String cancelMenuItemName = scan.nextLine();
-          cancelMenuItemsAndPrint(cancelMenuItemName);
+          cancelMenuItems(cancelMenuItemName);
         }
       }
     }

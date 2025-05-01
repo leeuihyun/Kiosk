@@ -1,3 +1,9 @@
+package domain;
+
+/*
+ * name : MenuItem
+ * desc : 세부 메뉴의 정보 클래스
+ */
 public class MenuItem {
   private String name;
   private Double price;

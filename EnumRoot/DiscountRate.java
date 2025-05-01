@@ -1,3 +1,9 @@
+package EnumRoot;
+
+/*
+ * name : DiscountRate
+ * desc : 주문 시 할인 선택 Enum
+ */
 public enum DiscountRate {
   NATIONALMERIT(1,10, "국가 유공자"),
   SOLDIER(2,5, "군인"),

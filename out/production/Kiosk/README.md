@@ -1,1 +1,1 @@
-# Kiosk
+# domain.Kiosk

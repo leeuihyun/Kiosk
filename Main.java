@@ -1,3 +1,8 @@
+import EnumRoot.KioskMenu;
+import EnumRoot.KioskMenuItem;
+import domain.Kiosk;
+import domain.Menu;
+import domain.MenuItem;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,22 +13,22 @@ public class Main {
     List<MenuItem> drinkItems = new ArrayList<>();
     List<MenuItem> dessertItems = new ArrayList<>();
 
-    burgerItems.add(new MenuItem("ShackBurger", 6.9, "토마토, 양상추, 쉑소스가 토핑된 치즈버거"));
-    burgerItems.add(new MenuItem("SmokeShack", 8.9, "베이컨, 체리 페퍼에 쉑소스가 토핑된 치즈버거"));
-    burgerItems.add(new MenuItem("Cheeseburger", 6.9, "포테이토 번과 비프패티, 치즈가 토핑된 치즈버거"));
-    burgerItems.add(new MenuItem("Hamburger", 5.4, "비프패티를 기반으로 야채가 들어간 기본버거"));
+    burgerItems.add(new MenuItem(KioskMenuItem.SHACKBURGER.getName(), KioskMenuItem.SHACKBURGER.getPrice(), KioskMenuItem.SHACKBURGER.getDesc()));
+    burgerItems.add(new MenuItem(KioskMenuItem.SMOKESHACK.getName(), KioskMenuItem.SMOKESHACK.getPrice(), KioskMenuItem.SMOKESHACK.getDesc()));
+    burgerItems.add(new MenuItem(KioskMenuItem.CHEESEBURGER.getName(), KioskMenuItem.CHEESEBURGER.getPrice(), KioskMenuItem.CHEESEBURGER.getDesc()));
+    burgerItems.add(new MenuItem(KioskMenuItem.HAMBURGER.getName(), KioskMenuItem.HAMBURGER.getPrice(), KioskMenuItem.HAMBURGER.getDesc()));
 
-    drinkItems.add(new MenuItem("Coke", 2.0, "시원한 콜라"));
-    drinkItems.add(new MenuItem("Lemonade", 2.5, "시원한 레몬에이드"));
-    drinkItems.add(new MenuItem("Iced Tea", 2.3, "시원한 아이스티"));
+    drinkItems.add(new MenuItem(KioskMenuItem.COKE.getName(), KioskMenuItem.COKE.getPrice(), KioskMenuItem.COKE.getDesc()));
+    drinkItems.add(new MenuItem(KioskMenuItem.LEMONADE.getName(), KioskMenuItem.LEMONADE.getPrice(), KioskMenuItem.LEMONADE.getDesc()));
+    drinkItems.add(new MenuItem(KioskMenuItem.ICEDTEA.getName(), KioskMenuItem.ICEDTEA.getPrice(), KioskMenuItem.ICEDTEA.getDesc()));
 
-    dessertItems.add(new MenuItem("Chocolate", 3.0, "맛있는 초콜릿"));
-    dessertItems.add(new MenuItem("Cake", 4.5, "맛있는 케이크"));
-    dessertItems.add(new MenuItem("Cookie", 1.5, "맛있는 쿠키"));
+    dessertItems.add(new MenuItem(KioskMenuItem.CHOCOLATE.getName(), KioskMenuItem.CHOCOLATE.getPrice(), KioskMenuItem.CHOCOLATE.getDesc()));
+    dessertItems.add(new MenuItem(KioskMenuItem.CAKE.getName(), KioskMenuItem.CAKE.getPrice(), KioskMenuItem.CAKE.getDesc()));
+    dessertItems.add(new MenuItem(KioskMenuItem.COOKIE.getName(), KioskMenuItem.COOKIE.getPrice(), KioskMenuItem.COOKIE.getDesc()));
 
-    Menu burgerMenus = new Menu("Burgers", burgerItems);
-    Menu drinkMenus = new Menu("Drinks", drinkItems);
-    Menu dessertMenus = new Menu("Desserts", dessertItems);
+    Menu burgerMenus = new Menu(KioskMenu.BURGERS.getName(), burgerItems);
+    Menu drinkMenus = new Menu(KioskMenu.DRINKS.getName(), drinkItems);
+    Menu dessertMenus = new Menu(KioskMenu.DESSERTS.getName(), dessertItems);
 
     Kiosk kiosk = new Kiosk(new ArrayList<>(Arrays.asList(burgerMenus, drinkMenus, dessertMenus)));
     kiosk.start();

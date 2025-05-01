@@ -1,7 +1,13 @@
+package domain;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ * name : ShoppingCart
+ * desc : 장바구니 클래스
+ */
 public class ShoppingCart {
   private List<MenuItem> menuItems;
 
