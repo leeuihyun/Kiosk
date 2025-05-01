@@ -36,8 +36,14 @@ public class ShoppingCart {
     return originalTotalPrice - (originalTotalPrice * rate/100.0);
   }
 
+  // 장바구니 메뉴 취소 기능
   public void cancelMenuItem(String menuItemName) {
     this.menuItems = this.menuItems.stream().filter(v -> !v.getName().replaceAll("\\s+", "").equals(menuItemName.replaceAll("\\s+", ""))).collect(
         Collectors.toList());
+  }
+
+  // 장바구니 포함 검사
+  public boolean containsShoppingCart(String menuItemName) {
+    return this.menuItems.stream().anyMatch(v -> v.getName().replaceAll("\\s","").equals(menuItemName.replaceAll("\\s+", "")));
   }
 }

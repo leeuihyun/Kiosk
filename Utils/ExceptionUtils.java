@@ -33,6 +33,15 @@ public class ExceptionUtils {
     return Loop.TRUE;
   }
 
+  // 취소 세부메뉴 문자열 검증
+  public static Loop validateCancelString(ShoppingCart shoppingCart, String cancelStr) {
+    if(!shoppingCart.containsShoppingCart(cancelStr)) {
+      System.out.println("입력하신 메뉴는 장바구니에 존재하지 않습니다. 초기화면으로 돌아갑니다.");
+      return Loop.CONTINUE;
+    }
+    return Loop.TRUE;
+  }
+
   // 세부 메뉴(카테고리) 검증
   public static <T> Loop validateDetailMenuNumber(List<T> list, Integer number, String exitOrContinue) {
     if(number < 0) {

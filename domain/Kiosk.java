@@ -1,5 +1,6 @@
 package domain;
 
+import static Utils.ExceptionUtils.validateCancelString;
 import static Utils.ExceptionUtils.validateDetailMenuNumber;
 import static Utils.ExceptionUtils.validateMenuNumber;
 
@@ -110,6 +111,8 @@ public class Kiosk {
       printShoppingCartMenuItem();
     }
   }
+
+  // Kiost 전체 로직
   public void start() {
     while(true) {
       // 메인 메뉴 출력
@@ -158,7 +161,10 @@ public class Kiosk {
           printShoppingCartMenuItem();
           System.out.println("어떤 주문을 취소하시겠습니까? 취소하실 메뉴의 이름을 입력해주세요.");
           String cancelMenuItemName = scan.nextLine();
-          cancelMenuItems(cancelMenuItemName);
+          Loop cancelVaildateNumber = validateCancelString(shoppingCart, cancelMenuItemName);
+          if(cancelVaildateNumber != Loop.CONTINUE) {
+            cancelMenuItems(cancelMenuItemName);
+          }
         }
       }
     }
